@@ -404,6 +404,10 @@ value="">Select</option><option>1</option><option>2</option><option>3</option><o
   // convert file to base64 (so storage rules won't block)
   function fileToBase64(file){
     return new Promise((res, rej)=>{
+      if (file.size > 200*1024) {
+   alert("Image too large, please upload smaller file (<200KB)");
+   return;
+}
       if(!file){ res(null); return; }
       const reader = new FileReader();
       reader.onload = ()=>res(reader.result.toString());
