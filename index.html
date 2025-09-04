@@ -593,9 +593,11 @@ ${pwd1}`;
     `;
     document.getElementById('detailBlock').innerHTML = html;
     // images (base64)
+    if (data.images){
     document.getElementById('imgId').src = (data.images && data.images.id) || '';
     document.getElementById('imgSign').src = (data.images && data.images.sign) || '';
      document.getElementById('imgmeter').src = (data.images && data.images.meter) || '';
+    }
     // payments table (current year)
     const tbody = document.querySelector('#paymentsTable tbody'); tbody.innerHTML = '';
     const pay = (data.payments && data.payments[currentYear]) || {};
