@@ -573,6 +573,42 @@ ${pwd1}`;
   }
 
   // ---------- Open detail page (user or owner) ----------
+    function openDetailPage(regNo, data, isOwnerMode){
+  const detail = document.getElementById('detail');
+  nav('page-detail');
+
+  detail.innerHTML = `
+    <h2>Details — ${data.fullName}</h2>
+    <p><b>Reg No:</b> ${data.regNo}</p>
+    <label>Full Name: <input id="edit-fullName" value="${data.fullName}" ${!isOwnerMode ? 'readonly' : ''}></label><br>
+    <label>Rent: <input id="edit-rent" value="${data.rent}" ${!isOwnerMode ? 'readonly' : ''}></label><br>
+    <label>Advance: <input id="edit-advance" value="${data.advance}" ${!isOwnerMode ? 'readonly' : ''}></label><br>
+    <label>Electric: <input id="edit-electric" value="${data.electric}" ${!isOwnerMode ? 'readonly' : ''}></label><br>
+    <h3>Payments</h3>
+    <div id="payments"></div>
+  `;
+
+  // Payments list render
+  const payDiv = document.getElementById('payments');
+  if(data.payments && data.payments.length){
+    data.payments.forEach(p=>{
+      const d = document.createElement('div');
+      d.textContent = `${p.date} — ${p.amount}`;
+      payDiv.appendChild(d);
+    });
+  }else{
+    payDiv.textContent = "No payments yet";
+  }
+
+  // Show update button only for owner
+  const btnUpdate = document.getElementById('btn-update');
+  if(isOwnerMode){
+    btnUpdate.classList.remove('hidden');
+    btnUpdate.dataset.regno = regNo;
+  }else{
+    btnUpdate.classList.add('hidden');
+  }
+}
   let currentReg = null;
   let ownerMode = false;
   function openDetailPage(regNo, data, isOwner){
@@ -671,6 +707,24 @@ if(isOwner){
   }
 
   // ---------- Save owner edits ----------
+    async function saveOwnerEdits(){
+  const regNo = document.getElementById('btn-update').dataset.regno;
+  const ref = db.ref('users/'+regNo);
+
+  const updated = {
+    fullName: document.getElementById('edit-fullName').value,
+    rent: document.getElementById('edit-rent').value,
+    advance: document.getElementById('edit-advance').value,
+    electric: document.getElementById('edit-electric').value
+  };
+
+  try{
+    await ref.update(updated);
+    alert("Updated successfully!");
+  }catch(err){
+    alert("Error: "+err.message);
+  }
+}
   async function saveOwnerEdits(){
   if(!ownerMode) { alert('Owner mode required'); return; }
   const stat = document.getElementById('detailStatus'); 
