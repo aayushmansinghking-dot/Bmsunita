@@ -574,6 +574,7 @@ ${pwd1}`;
 
   // ---------- Open detail page (user or owner) ----------
     function openDetailPage(regNo, data, isOwnerMode){
+      current_reg_no = regno;
   const detail = document.getElementById('detail');
   nav('page-detail');
 
@@ -761,7 +762,7 @@ if(isOwner){
     const users = snap.val() || {};
 
     // prepare updates for every user
-    Object.keys(users).forEach(regNo=>{
+    let current_reg_no = null;
       Object.keys(rentValues).forEach(m=>{
         updates[`users/${regNo}/payments/${year}/${m}/rent`] = rentValues[m];
         updates[`users/${regNo}/payments/${year}/${m}/status`] = statusValues[m];
