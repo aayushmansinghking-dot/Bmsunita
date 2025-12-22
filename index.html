@@ -708,23 +708,34 @@ if(isOwner){
 
   // ---------- Save owner edits ----------
     async function saveOwnerEdits(){
-  const regNo = document.getElementById('btn-update').dataset.regno;
-  const ref = db.ref('users/'+regNo);
+  if(!ownerMode){
+    alert('Owner mode required');
+    return;
+  }
 
-  const updated = {
+  const btn = document.getElementById('btn-update');
+  const regNo = btn.dataset.regno;   // ✅ VERY IMPORTANT
+
+  if(!regNo){
+    alert('Registration number missing');
+    return;
+  }
+
+  const updates = {
     fullName: document.getElementById('edit-fullName').value,
+    mobile: document.getElementById('edit-mobile').value,
     rent: document.getElementById('edit-rent').value,
     advance: document.getElementById('edit-advance').value,
-    electric: document.getElementById('edit-electric').value
+    meter: document.getElementById('edit-electric').value
   };
 
   try{
-    await ref.update(updated);
-    alert("Updated successfully!");
+    await db.ref('users/' + regNo).update(updates);
+    alert('Updated successfully');
   }catch(err){
-    alert("Error: "+err.message);
+    alert('Error: ' + err.message);
   }
-}
+    }
   async function saveOwnerEdits(){
   if(!ownerMode) { alert('Owner mode required'); return; }
   const stat = document.getElementById('detailStatus'); 
