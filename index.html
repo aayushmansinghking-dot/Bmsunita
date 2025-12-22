@@ -609,10 +609,10 @@ ${pwd1}`;
     btnUpdate.classList.add('hidden');
   }
 }
-  let currentReg = null;
+  let currentRegNo = null;
   let ownerMode = false;
   function openDetailPage(regNo, data, isOwner){
-    currentReg = regNo; ownerMode = !!isOwner;
+    currentRegNo = regNo; ownerMode = !!isOwner;
     document.getElementById('detailTitle').textContent = `Details — Reg: ${regNo}`;
     document.getElementById('detailMode').textContent = isOwner ? 'OWNER (editable)' : 'USER (view)';
     // details block
