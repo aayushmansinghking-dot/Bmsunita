@@ -5,27 +5,11 @@
 <title>AAYUSHMAN AI INDUSTRIES</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- =====================================================
-     GLOBAL STYLES
-===================================================== -->
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Courier New,monospace}
+body{background:black;color:#00ff66;overflow:hidden}
 
-/* -------------------- RESET -------------------- */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: "Courier New", monospace;
-}
-
-/* -------------------- BODY -------------------- */
-body{
-  background:black;
-  color:#00ff66;
-  overflow:hidden;
-}
-
-/* -------------------- BRAND -------------------- */
+/* BRAND */
 .brand{
   position:fixed;
   top:10px;
@@ -34,10 +18,10 @@ body{
   letter-spacing:4px;
   font-size:13px;
   opacity:0.7;
-  z-index:20;
+  z-index:10;
 }
 
-/* -------------------- PAGES -------------------- */
+/* PAGES */
 .page{
   display:none;
   width:100vw;
@@ -47,12 +31,9 @@ body{
   flex-direction:column;
   text-align:center;
 }
+.page.active{display:flex}
 
-.page.active{
-  display:flex;
-}
-
-/* -------------------- ENTER BUTTON -------------------- */
+/* BUTTON */
 .enter-btn{
   margin-top:25px;
   padding:12px 30px;
@@ -60,15 +41,10 @@ body{
   background:black;
   color:#00ff66;
   cursor:pointer;
-  letter-spacing:2px;
 }
+.enter-btn:hover{background:#00ff66;color:black}
 
-.enter-btn:hover{
-  background:#00ff66;
-  color:black;
-}
-
-/* -------------------- INPUT -------------------- */
+/* INPUT */
 input{
   background:black;
   border:2px solid #00ff66;
@@ -77,67 +53,22 @@ input{
   width:260px;
   text-align:center;
   font-size:18px;
-  outline:none;
 }
 
-/* -------------------- VIDEO -------------------- */
+/* CAMERA */
 video{
   width:260px;
   border:2px solid #00ff66;
 }
 
-/* -------------------- SCAN BOX -------------------- */
-.scan-box{
-  width:260px;
-  height:10px;
-  background:#002200;
-  margin-top:10px;
-  overflow:hidden;
-}
-
-.scan-line{
-  width:100%;
-  height:3px;
-  background:#00ff66;
-  animation:scan 1.2s linear infinite;
-}
-
-@keyframes scan{
-  from{transform:translateY(-5px)}
-  to{transform:translateY(10px)}
-}
-
-/* -------------------- FINGERPRINT -------------------- */
-.fingerprint{
-  width:180px;
-  height:180px;
-  border-radius:50%;
-  border:3px solid #00ff66;
-  position:relative;
-  animation:pulse 1.2s infinite;
-}
-
-@keyframes pulse{
-  0%{box-shadow:0 0 5px #00ff66}
-  100%{box-shadow:0 0 25px #00ff66}
-}
-
-/* -------------------- INFO TEXT -------------------- */
-.info{
-  margin-top:15px;
-  font-size:13px;
-  opacity:0.8;
-}
-
-/* -------------------- MATRIX CANVAS -------------------- */
+/* MATRIX */
 canvas{
   position:fixed;
-  top:0;
-  left:0;
+  top:0;left:0;
   z-index:-2;
 }
 
-/* -------------------- SCANLINES -------------------- */
+/* SCANLINES */
 .scanlines{
   position:fixed;
   width:100%;
@@ -152,202 +83,212 @@ canvas{
   z-index:-1;
 }
 
+/* FINGERPRINT */
+.fingerprint{
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  border:3px solid #00ff66;
+  position:relative;
+  box-shadow:0 0 10px #00ff66;
+  overflow:hidden;
+}
+
+/* ACTIVE SCAN */
+.fingerprint.scanning{
+  box-shadow:0 0 40px #00ff66;
+}
+
+/* SCAN SWEEP */
+.scan-sweep{
+  position:absolute;
+  width:100%;
+  height:6px;
+  background:#00ff66;
+  top:-10px;
+  animation:scanMove 1s linear infinite;
+  display:none;
+}
+.fingerprint.scanning .scan-sweep{
+  display:block;
+}
+
+@keyframes scanMove{
+  from{top:-10px}
+  to{top:210px}
+}
+
+/* PROGRESS */
+.progress{
+  margin-top:15px;
+  width:200px;
+  height:8px;
+  border:1px solid #00ff66;
+}
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:#00ff66;
+}
+
+/* INFO */
+.info{
+  margin-top:15px;
+  font-size:13px;
+  opacity:0.8;
+}
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     BACKGROUND ELEMENTS
-===================================================== -->
 <div class="brand">AAYUSHMAN AI INDUSTRIES</div>
 <canvas id="matrix"></canvas>
 <div class="scanlines"></div>
 
-<!-- =====================================================
-     PAGE 1 : NAME INPUT
-===================================================== -->
+<!-- PAGE 1 -->
 <div class="page active" id="page1">
   <h2>IDENTITY REGISTRATION</h2><br>
-  <input id="username" placeholder="ENTER NAME">
+  <input placeholder="ENTER NAME">
   <button class="enter-btn" onclick="next()">ENTER</button>
 </div>
 
-<!-- =====================================================
-     PAGE 2 : FACE SCAN
-===================================================== -->
+<!-- PAGE 2 -->
 <div class="page" id="page2">
-  <h2>FACE SCAN MODULE</h2><br>
-  <video id="camera" autoplay></video>
-  <div class="scan-box"><div class="scan-line"></div></div>
+  <h2>FACE SCAN</h2><br>
+  <video id="cam" autoplay></video>
   <button class="enter-btn" onclick="next()">ENTER</button>
 </div>
 
-<!-- =====================================================
-     PAGE 3 : FINGERPRINT
-===================================================== -->
+<!-- PAGE 3 -->
 <div class="page" id="page3">
-  <h2>FINGERPRINT VERIFICATION</h2><br>
-  <div class="fingerprint"></div>
-  <div class="info">PRESS ENTER 3 TIMES</div>
+  <h2>FINGERPRINT SCAN</h2><br>
+
+  <div class="fingerprint" id="finger">
+    <div class="scan-sweep"></div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-fill" id="progress"></div>
+  </div>
+
+  <div class="info">HOLD YOUR FINGER • 3 SCANS REQUIRED</div>
   <button class="enter-btn" onclick="next()">ENTER</button>
 </div>
 
-<!-- =====================================================
-     PAGE 4 : ACCESS GRANTED
-===================================================== -->
+<!-- PAGE 4 -->
 <div class="page" id="page4">
   <h1>ACCESS GRANTED</h1><br>
   <h3>WELCOME AYUSHMAN</h3>
   <p class="info">SYSTEM IS ACTIVE</p>
 </div>
 
-<!-- =====================================================
-     SCRIPT SECTION
-===================================================== -->
 <script>
-
-/* =====================================================
-   MATRIX EFFECT
-===================================================== */
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
-const letters = "101010010101011001";
-const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
-
-function drawMatrix(){
-  ctx.fillStyle = "rgba(0,0,0,0.05)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = "#00ff66";
-  ctx.font = fontSize + "px monospace";
-
+/* MATRIX */
+const c=document.getElementById("matrix");
+const x=c.getContext("2d");
+c.width=innerWidth;c.height=innerHeight;
+const letters="10101001";
+const fs=16, cols=c.width/fs;
+const drops=Array(Math.floor(cols)).fill(1);
+setInterval(()=>{
+  x.fillStyle="rgba(0,0,0,0.05)";
+  x.fillRect(0,0,c.width,c.height);
+  x.fillStyle="#00ff66";
+  x.font=fs+"px monospace";
   for(let i=0;i<drops.length;i++){
-    const text = letters[Math.floor(Math.random()*letters.length)];
-    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-    if(drops[i]*fontSize > canvas.height && Math.random() > 0.95){
-      drops[i]=0;
-    }
+    x.fillText(letters[Math.random()*letters.length|0],i*fs,drops[i]*fs);
+    if(drops[i]*fs>c.height && Math.random()>0.95)drops[i]=0;
     drops[i]++;
   }
-}
-setInterval(drawMatrix,33);
+},33);
 
-/* =====================================================
-   PAGE CONTROL
-===================================================== */
-let page = 1;
-let enterCount = 0;
-let musicStarted = false;
-
+/* PAGE CONTROL */
+let page=1, scans=0;
 function show(p){
   document.getElementById("page"+page).classList.remove("active");
   document.getElementById("page"+p).classList.add("active");
-  page = p;
+  page=p;
 }
-
 function next(){
-  handleEnter();
+  startMusic();
+  if(page===1){show(2); startCam();}
+  else if(page===2){show(3);}
+  else if(page===3 && scans>=3){show(4); speak();}
 }
 
-/* =====================================================
-   KEYBOARD ENTER SUPPORT
-===================================================== */
-document.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    handleEnter();
-  }
-});
+/* CAMERA */
+function startCam(){
+  navigator.mediaDevices.getUserMedia({video:true})
+    .then(s=>cam.srcObject=s);
+}
 
-/* =====================================================
-   ENTER LOGIC
-===================================================== */
-function handleEnter(){
-  startMusic();
-  clickSound();
+/* FINGERPRINT TOUCH */
+const finger=document.getElementById("finger");
+const prog=document.getElementById("progress");
+let hold=false, progVal=0;
 
-  if(page===1){
-    show(2);
-    startCamera();
-  }
-  else if(page===2){
-    show(3);
-  }
-  else if(page===3){
-    enterCount++;
-    if(enterCount>=3){
-      show(4);
-      speak();
+function startScan(){
+  if(scans>=3)return;
+  hold=true;
+  finger.classList.add("scanning");
+}
+function stopScan(){
+  hold=false;
+  finger.classList.remove("scanning");
+  progVal=0;
+  prog.style.width="0%";
+}
+
+finger.addEventListener("mousedown",startScan);
+finger.addEventListener("touchstart",startScan);
+document.addEventListener("mouseup",stopScan);
+document.addEventListener("touchend",stopScan);
+
+setInterval(()=>{
+  if(hold){
+    progVal+=2;
+    prog.style.width=progVal+"%";
+    if(progVal>=100){
+      scans++;
+      progVal=0;
+      prog.style.width="0%";
+      hold=false;
+      finger.classList.remove("scanning");
     }
   }
-}
+},30);
 
-/* =====================================================
-   CAMERA
-===================================================== */
-function startCamera(){
-  navigator.mediaDevices.getUserMedia({video:true})
-    .then(stream=>{
-      document.getElementById("camera").srcObject = stream;
-    })
-    .catch(()=>{});
-}
-
-/* =====================================================
-   AI VOICE
-===================================================== */
+/* VOICE */
 function speak(){
-  let msg = new SpeechSynthesisUtterance(
+  let u=new SpeechSynthesisUtterance(
     "Access granted. Please welcome Ayushman. System is active."
   );
-  msg.rate = 1.05;
-  msg.pitch = 0.4;
-  speechSynthesis.speak(msg);
+  u.rate=1.05;u.pitch=0.4;
+  speechSynthesis.speak(u);
 }
 
-/* =====================================================
-   EMBEDDED BACKGROUND MUSIC (WEB AUDIO)
-===================================================== */
-let audioCtx;
-let oscillator;
-let gain;
-
+/* 🇮🇳 PATRIOTIC BACKGROUND MUSIC */
+let ctx, started=false;
 function startMusic(){
-  if(musicStarted) return;
-  musicStarted = true;
+  if(started) return;
+  started=true;
+  ctx=new AudioContext();
 
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  oscillator = audioCtx.createOscillator();
-  gain = audioCtx.createGain();
+  const notes=[261,293,329,392,440,392,329,293]; // patriotic feel
+  let i=0;
 
-  oscillator.type = "sawtooth";
-  oscillator.frequency.value = 90;
-  gain.gain.value = 0.03;
-
-  oscillator.connect(gain);
-  gain.connect(audioCtx.destination);
-  oscillator.start();
+  setInterval(()=>{
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.type="triangle";
+    o.frequency.value=notes[i++%notes.length];
+    g.gain.value=0.04;
+    o.connect(g);g.connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime+0.3);
+  },350);
 }
-
-/* =====================================================
-   CLICK SOUND
-===================================================== */
-function clickSound(){
-  if(!audioCtx) return;
-  let o = audioCtx.createOscillator();
-  let g = audioCtx.createGain();
-  o.frequency.value = 800;
-  g.gain.value = 0.05;
-  o.connect(g);
-  g.connect(audioCtx.destination);
-  o.start();
-  o.stop(audioCtx.currentTime + 0.05);
-}
-
 </script>
 
 </body>
